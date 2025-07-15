@@ -6,5 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
-    //
+    protected $fillable = [
+        'patient_number',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'date_of_birth',
+        'gender',
+        'phone_number',
+        'email',
+        'address',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'emergency_contact_relationship',
+        'national_id',
+        'insurance_provider',
+        'insurance_number',
+        'medical_history',
+        'allergies',
+        'current_medications',
+        'status'
+    ];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
 }
