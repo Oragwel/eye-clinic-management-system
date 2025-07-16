@@ -31,4 +31,30 @@ class Patient extends Model
     protected $casts = [
         'date_of_birth' => 'date',
     ];
+
+    // Relationships
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function vitalSigns()
+    {
+        return $this->hasMany(VitalSign::class);
+    }
+
+    public function diagnoses()
+    {
+        return $this->hasMany(Diagnosis::class);
+    }
+
+    public function surgeries()
+    {
+        return $this->hasMany(Surgery::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }
