@@ -8,6 +8,7 @@ use App\Http\Controllers\SurgeryController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PharmacyController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +41,9 @@ Route::middleware('auth')->group(function () {
 
     // Inventory Management
     Route::resource('inventory', InventoryController::class);
+
+    // Pharmacy Management
+    Route::resource('pharmacy', PharmacyController::class);
 
     // Billing/Invoice Management
     Route::resource('invoices', InvoiceController::class);
