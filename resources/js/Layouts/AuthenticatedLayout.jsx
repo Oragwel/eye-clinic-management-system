@@ -2,7 +2,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
@@ -120,21 +120,20 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             <div className="hidden space-x-1 sm:-my-px sm:ms-10 sm:flex">
                                 {navigationItems.map((item) => (
-                                    <Link
+                                    <button
                                         key={item.name}
-                                        href={item.href}
-                                        className={`inline-flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                                        onClick={() => router.visit(item.href)}
+                                        className={`inline-flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer ${
                                             item.active
                                                 ? 'bg-blue-100 text-blue-700 shadow-sm'
                                                 : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
                                         }`}
-                                        preserveScroll
                                     >
                                         <div className={`${item.active ? 'text-blue-600' : 'text-gray-400'}`}>
                                             {item.icon}
                                         </div>
                                         <span>{item.name}</span>
-                                    </Link>
+                                    </button>
                                 ))}
                             </div>
                         </div>
@@ -235,13 +234,17 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                     <div className="space-y-1 pb-3 pt-2">
                         {navigationItems.map((item) => (
-                            <ResponsiveNavLink
+                            <button
                                 key={item.name}
-                                href={item.href}
-                                active={item.active}
+                                onClick={() => router.visit(item.href)}
+                                className={`block w-full text-left px-3 py-2 text-base font-medium transition duration-150 ease-in-out ${
+                                    item.active
+                                        ? 'border-l-4 border-indigo-400 bg-indigo-50 text-indigo-700 focus:border-indigo-700 focus:bg-indigo-100 focus:text-indigo-800'
+                                        : 'border-l-4 border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 focus:border-gray-300 focus:bg-gray-50 focus:text-gray-800'
+                                }`}
                             >
                                 {item.name}
-                            </ResponsiveNavLink>
+                            </button>
                         ))}
                     </div>
 

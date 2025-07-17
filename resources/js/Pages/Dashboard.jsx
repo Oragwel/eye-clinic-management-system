@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function Dashboard({ stats, recent_activities, charts }) {
@@ -61,9 +61,12 @@ export default function Dashboard({ stats, recent_activities, charts }) {
 
         if (href) {
             return (
-                <Link href={href} className="block transform transition-transform hover:scale-105" preserveScroll>
+                <button
+                    onClick={() => router.visit(href)}
+                    className="block transform transition-transform hover:scale-105 w-full text-left"
+                >
                     {cardContent}
-                </Link>
+                </button>
             );
         }
 
@@ -217,10 +220,9 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <Link
-                                href="/patients/create"
-                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
-                                preserveScroll
+                            <button
+                                onClick={() => router.visit('/patients/create')}
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 w-full text-left"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -232,12 +234,11 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                     <h4 className="text-lg font-semibold">Add Patient</h4>
                                     <p className="text-blue-100 text-sm mt-1">Register new patient</p>
                                 </div>
-                            </Link>
+                            </button>
 
-                            <Link
-                                href="/appointments/create"
-                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
-                                preserveScroll
+                            <button
+                                onClick={() => router.visit('/appointments/create')}
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 w-full text-left"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -249,12 +250,11 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                     <h4 className="text-lg font-semibold">Book Appointment</h4>
                                     <p className="text-green-100 text-sm mt-1">Schedule consultation</p>
                                 </div>
-                            </Link>
+                            </button>
 
-                            <Link
-                                href="/surgeries/create"
-                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
-                                preserveScroll
+                            <button
+                                onClick={() => router.visit('/surgeries/create')}
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 w-full text-left"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -266,12 +266,11 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                     <h4 className="text-lg font-semibold">Schedule Surgery</h4>
                                     <p className="text-purple-100 text-sm mt-1">Plan eye procedure</p>
                                 </div>
-                            </Link>
+                            </button>
 
-                            <Link
-                                href="/invoices/create"
-                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
-                                preserveScroll
+                            <button
+                                onClick={() => router.visit('/invoices/create')}
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 w-full text-left"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -283,7 +282,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                     <h4 className="text-lg font-semibold">Create Invoice</h4>
                                     <p className="text-orange-100 text-sm mt-1">Generate billing</p>
                                 </div>
-                            </Link>
+                            </button>
                         </div>
                     </div>
 
@@ -306,11 +305,10 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             <div className="space-y-4">
                                 {recent_activities?.todays_schedule?.length > 0 ? (
                                     recent_activities.todays_schedule.slice(0, 5).map((appointment, index) => (
-                                        <Link
+                                        <button
                                             key={index}
-                                            href={`/appointments/${appointment.id}`}
-                                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer"
-                                            preserveScroll
+                                            onClick={() => router.visit(`/appointments/${appointment.id}`)}
+                                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer w-full text-left"
                                         >
                                             <div className="flex items-center space-x-3">
                                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -332,7 +330,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                                     Dr. {appointment.doctor?.name}
                                                 </p>
                                             </div>
-                                        </Link>
+                                        </button>
                                     ))
                                 ) : (
                                     <div className="text-center py-8">
@@ -362,11 +360,10 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             <div className="space-y-4">
                                 {recent_activities?.patients?.length > 0 ? (
                                     recent_activities.patients.map((patient, index) => (
-                                        <Link
+                                        <button
                                             key={index}
-                                            href={`/patients/${patient.id}`}
-                                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer"
-                                            preserveScroll
+                                            onClick={() => router.visit(`/patients/${patient.id}`)}
+                                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer w-full text-left"
                                         >
                                             <div className="flex items-center space-x-3">
                                                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -393,7 +390,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                                     {patient.status}
                                                 </span>
                                             </div>
-                                        </Link>
+                                        </button>
                                     ))
                                 ) : (
                                     <div className="text-center py-8">
