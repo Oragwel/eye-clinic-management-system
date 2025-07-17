@@ -119,21 +119,21 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             <div className="hidden space-x-1 sm:-my-px sm:ms-10 sm:flex">
                                 {navigationItems.map((item) => (
-                                    <NavLink
+                                    <Link
                                         key={item.name}
                                         href={item.href}
-                                        active={item.active}
                                         className={`inline-flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                                             item.active
                                                 ? 'bg-blue-100 text-blue-700 shadow-sm'
                                                 : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
                                         }`}
+                                        preserveScroll
                                     >
                                         <div className={`${item.active ? 'text-blue-600' : 'text-gray-400'}`}>
                                             {item.icon}
                                         </div>
                                         <span>{item.name}</span>
-                                    </NavLink>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -167,12 +167,12 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                     <Dropdown.Content>
                                         <Dropdown.Link
-                                            href={route('profile.edit')}
+                                            href="/profile"
                                         >
                                             Profile
                                         </Dropdown.Link>
                                         <Dropdown.Link
-                                            href={route('logout')}
+                                            href="/logout"
                                             method="post"
                                             as="button"
                                         >
@@ -233,12 +233,15 @@ export default function AuthenticatedLayout({ header, children }) {
                     }
                 >
                     <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
+                        {navigationItems.map((item) => (
+                            <ResponsiveNavLink
+                                key={item.name}
+                                href={item.href}
+                                active={item.active}
+                            >
+                                {item.name}
+                            </ResponsiveNavLink>
+                        ))}
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">
@@ -252,12 +255,12 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
+                            <ResponsiveNavLink href="/profile">
                                 Profile
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
-                                href={route('logout')}
+                                href="/logout"
                                 as="button"
                             >
                                 Log Out

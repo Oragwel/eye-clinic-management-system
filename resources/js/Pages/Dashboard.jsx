@@ -61,7 +61,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
 
         if (href) {
             return (
-                <Link href={href} className="block transform transition-transform hover:scale-105">
+                <Link href={href} className="block transform transition-transform hover:scale-105" preserveScroll>
                     {cardContent}
                 </Link>
             );
@@ -220,6 +220,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             <Link
                                 href="/patients/create"
                                 className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                                preserveScroll
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -236,6 +237,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             <Link
                                 href="/appointments/create"
                                 className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                                preserveScroll
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -252,6 +254,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             <Link
                                 href="/surgeries/create"
                                 className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                                preserveScroll
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -268,6 +271,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             <Link
                                 href="/invoices/create"
                                 className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                                preserveScroll
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-transparent"></div>
                                 <div className="relative">
@@ -306,6 +310,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                             key={index}
                                             href={`/appointments/${appointment.id}`}
                                             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer"
+                                            preserveScroll
                                         >
                                             <div className="flex items-center space-x-3">
                                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -361,6 +366,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                             key={index}
                                             href={`/patients/${patient.id}`}
                                             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer"
+                                            preserveScroll
                                         >
                                             <div className="flex items-center space-x-3">
                                                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
