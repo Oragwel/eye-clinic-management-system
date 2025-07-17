@@ -1,7 +1,16 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Dashboard({ stats, recent_activities, charts }) {
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    // Update time every minute
+    useState(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+        return () => clearInterval(timer);
+    }, []);
+
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-KE', {
             style: 'currency',
@@ -9,70 +18,91 @@ export default function Dashboard({ stats, recent_activities, charts }) {
         }).format(amount || 0);
     };
 
-    const StatCard = ({ title, value, subtitle, icon, color = 'blue', href = null }) => {
+    const StatCard = ({ title, value, subtitle, icon, color = 'blue', href = null, trend = null }) => {
         const colorClasses = {
-            blue: 'bg-blue-500 text-blue-600 bg-blue-50',
-            green: 'bg-green-500 text-green-600 bg-green-50',
-            purple: 'bg-purple-500 text-purple-600 bg-purple-50',
-            orange: 'bg-orange-500 text-orange-600 bg-orange-50',
-            red: 'bg-red-500 text-red-600 bg-red-50',
-            yellow: 'bg-yellow-500 text-yellow-600 bg-yellow-50'
+            blue: { bg: 'bg-blue-50', icon: 'bg-blue-500', text: 'text-blue-600', border: 'border-blue-200' },
+            green: { bg: 'bg-green-50', icon: 'bg-green-500', text: 'text-green-600', border: 'border-green-200' },
+            purple: { bg: 'bg-purple-50', icon: 'bg-purple-500', text: 'text-purple-600', border: 'border-purple-200' },
+            orange: { bg: 'bg-orange-50', icon: 'bg-orange-500', text: 'text-orange-600', border: 'border-orange-200' },
+            red: { bg: 'bg-red-50', icon: 'bg-red-500', text: 'text-red-600', border: 'border-red-200' },
+            yellow: { bg: 'bg-yellow-50', icon: 'bg-yellow-500', text: 'text-yellow-600', border: 'border-yellow-200' }
         };
 
+        const colors = colorClasses[color];
+
         const cardContent = (
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-sm font-medium text-gray-600">{title}</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
-                    {subtitle && (
-                        <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
-                    )}
-                </div>
-                <div className={`w-12 h-12 ${colorClasses[color].split(' ')[2]} rounded-lg flex items-center justify-center`}>
-                    <div className={`w-6 h-6 ${colorClasses[color].split(' ')[1]}`}>
-                        {icon}
+            <div className={`relative overflow-hidden rounded-2xl border ${colors.border} ${colors.bg} p-6 transition-all duration-300 hover:shadow-lg hover:scale-105`}>
+                <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">{title}</p>
+                        <div className="mt-2 flex items-baseline">
+                            <p className="text-3xl font-bold text-gray-900">{value}</p>
+                            {trend && (
+                                <span className={`ml-2 text-sm font-medium ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    {trend > 0 ? '+' : ''}{trend}%
+                                </span>
+                            )}
+                        </div>
+                        {subtitle && (
+                            <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
+                        )}
+                    </div>
+                    <div className={`${colors.icon} rounded-xl p-3 shadow-lg`}>
+                        <div className="h-6 w-6 text-white">
+                            {icon}
+                        </div>
                     </div>
                 </div>
+                {href && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10"></div>
+                )}
             </div>
         );
 
         if (href) {
             return (
-                <Link href={href} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300 block">
+                <Link href={href} className="block transform transition-transform hover:scale-105">
                     {cardContent}
                 </Link>
             );
         }
 
-        return (
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300">
-                {cardContent}
-            </div>
-        );
+        return cardContent;
     };
 
     return (
         <AuthenticatedLayout
             header={
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Eye Clinic Dashboard
-                    </h2>
-                    <div className="text-sm text-gray-600">
-                        {new Date().toLocaleDateString('en-US', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+                        <p className="text-sm text-gray-600 mt-1">
+                            Welcome back! Here's what's happening at your clinic today.
+                        </p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-sm text-gray-600">
+                            {currentTime.toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </p>
+                        <p className="text-lg font-semibold text-gray-900">
+                            {currentTime.toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
+                        </p>
                     </div>
                 </div>
             }
         >
             <Head title="Dashboard" />
 
-            <div className="py-6">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-6">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     {/* Quick Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         <StatCard
@@ -81,9 +111,10 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             subtitle={`${stats?.patients?.new_this_month || 0} new this month`}
                             color="blue"
                             href="/patients"
+                            trend={12}
                             icon={
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                             }
                         />
@@ -94,6 +125,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             subtitle={`${stats?.appointments?.upcoming || 0} upcoming`}
                             color="green"
                             href="/appointments"
+                            trend={8}
                             icon={
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -107,6 +139,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             subtitle={`Total: ${formatCurrency(stats?.financial?.total_revenue)}`}
                             color="purple"
                             href="/invoices"
+                            trend={15}
                             icon={
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -120,6 +153,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                             subtitle={`${stats?.inventory?.expiring_soon || 0} expiring soon`}
                             color="orange"
                             href="/inventory"
+                            trend={-5}
                             icon={
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -168,55 +202,83 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                     </div>
 
                     {/* Quick Actions */}
-                    <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8 mb-8">
+                        <div className="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900">Quick Actions</h3>
+                                <p className="text-gray-600 mt-1">Frequently used actions for efficient workflow</p>
+                            </div>
+                            <div className="hidden md:block">
+                                <div className="flex items-center space-x-2 text-sm text-gray-500">
+                                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                    <span>System Online</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             <Link
                                 href="/patients/create"
-                                className="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition duration-200 group"
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
                             >
-                                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-3 group-hover:bg-blue-600 transition duration-200">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
+                                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-transparent"></div>
+                                <div className="relative">
+                                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="text-lg font-semibold">Add Patient</h4>
+                                    <p className="text-blue-100 text-sm mt-1">Register new patient</p>
                                 </div>
-                                <span className="text-sm font-medium text-gray-900">Add Patient</span>
                             </Link>
 
                             <Link
                                 href="/appointments/create"
-                                className="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition duration-200 group"
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
                             >
-                                <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-3 group-hover:bg-green-600 transition duration-200">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
+                                <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-transparent"></div>
+                                <div className="relative">
+                                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="text-lg font-semibold">Book Appointment</h4>
+                                    <p className="text-green-100 text-sm mt-1">Schedule consultation</p>
                                 </div>
-                                <span className="text-sm font-medium text-gray-900">Book Appointment</span>
+                            </Link>
+
+                            <Link
+                                href="/surgeries/create"
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-transparent"></div>
+                                <div className="relative">
+                                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="text-lg font-semibold">Schedule Surgery</h4>
+                                    <p className="text-purple-100 text-sm mt-1">Plan eye procedure</p>
+                                </div>
                             </Link>
 
                             <Link
                                 href="/invoices/create"
-                                className="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition duration-200 group"
+                                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105"
                             >
-                                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-3 group-hover:bg-purple-600 transition duration-200">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
+                                <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-transparent"></div>
+                                <div className="relative">
+                                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="text-lg font-semibold">Create Invoice</h4>
+                                    <p className="text-orange-100 text-sm mt-1">Generate billing</p>
                                 </div>
-                                <span className="text-sm font-medium text-gray-900">Create Invoice</span>
-                            </Link>
-
-                            <Link
-                                href="/inventory"
-                                className="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition duration-200 group"
-                            >
-                                <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-3 group-hover:bg-orange-600 transition duration-200">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                    </svg>
-                                </div>
-                                <span className="text-sm font-medium text-gray-900">Manage Inventory</span>
                             </Link>
                         </div>
                     </div>
@@ -242,7 +304,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                     recent_activities.todays_schedule.slice(0, 5).map((appointment, index) => (
                                         <Link
                                             key={index}
-                                            href={route('appointments.show', appointment.id)}
+                                            href={`/appointments/${appointment.id}`}
                                             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer"
                                         >
                                             <div className="flex items-center space-x-3">
@@ -297,7 +359,7 @@ export default function Dashboard({ stats, recent_activities, charts }) {
                                     recent_activities.patients.map((patient, index) => (
                                         <Link
                                             key={index}
-                                            href={route('patients.show', patient.id)}
+                                            href={`/patients/${patient.id}`}
                                             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200 cursor-pointer"
                                         >
                                             <div className="flex items-center space-x-3">

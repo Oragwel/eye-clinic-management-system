@@ -24,7 +24,7 @@ export default function Create() {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('patients.store'));
+        post('/patients');
     };
 
     return (
@@ -35,7 +35,7 @@ export default function Create() {
                         Add New Patient
                     </h2>
                     <Link
-                        href={route('patients.index')}
+                        href="/patients"
                         className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200"
                     >
                         Back to Patients
@@ -45,21 +45,29 @@ export default function Create() {
         >
             <Head title="Add Patient" />
 
-            <div className="py-6">
-                <div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
-                    <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-6">
+                <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
                         <form onSubmit={submit} className="space-y-6">
                             {/* Personal Information */}
-                            <div>
-                                <h3 className="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
+                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                                <div className="flex items-center mb-6">
+                                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-gray-900">Personal Information</h3>
+                                </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">First Name *</label>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2">First Name *</label>
                                         <input
                                             type="text"
                                             value={data.first_name}
                                             onChange={(e) => setData('first_name', e.target.value)}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            className="block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:ring-2 transition-all duration-200 bg-white/80 backdrop-blur-sm"
+                                            placeholder="Enter first name"
                                             required
                                         />
                                         {errors.first_name && <p className="mt-1 text-sm text-red-600">{errors.first_name}</p>}
